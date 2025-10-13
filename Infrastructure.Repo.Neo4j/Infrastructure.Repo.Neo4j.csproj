@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\MetaHammer.Domain.Entities\MetaHammer.Domain.Entities.csproj" />
+      <ProjectReference Include="..\MetaHammer.Domain.Interfaces\MetaHammer.Domain.Interfaces.csproj" />
+    </ItemGroup>
+
+</Project>
