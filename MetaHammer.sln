@@ -1,0 +1,71 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetaHammer.Presentation.Web", "MetaHammer.Presentation.Web\MetaHammer.Presentation.Web.csproj", "{C7DD0455-91B1-47E3-A67F-D37A11CAFE4D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1. Presentation", "1. Presentation", "{AE5B20F6-3A9D-4249-AF57-045EB8506B64}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3. Domain", "3. Domain", "{5D5DC430-6A6A-40F3-B0A3-77807D6BA83C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2. Application", "2. Application", "{6150AA33-6E43-4ACE-8875-E7E51A36116F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4. Infrastructure", "4. Infrastructure", "{E2D2CA0C-FB49-4AEE-BA59-174D6E2D9557}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetaHammer.Domain.Entities", "MetaHammer.Domain.Entities\MetaHammer.Domain.Entities.csproj", "{3C31E161-F243-4830-924A-53470F8AD9E0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetaHammer.Domain.Interfaces", "MetaHammer.Domain.Interfaces\MetaHammer.Domain.Interfaces.csproj", "{1BCB3E82-245A-4150-B788-23E1AABFA372}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetaHammer.Domain.Services", "MetaHammer.Domain.Services\MetaHammer.Domain.Services.csproj", "{B7D572FE-2B44-4757-9CED-48DD9A6495AF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetaHammer.Application", "MetaHammer.Application\MetaHammer.Application.csproj", "{DE4D24CE-A85C-4D06-B6CF-A9F45B175BD2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Repository.Neo4j", "Infrastructure.Repository.Neo4j\Infrastructure.Repository.Neo4j.csproj", "{A75A7F13-8035-4DA9-9F42-2D969FDCC188}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5. UnitTests", "5. UnitTests", "{9A9E5D37-2730-4540-878A-554B9D7E9EAA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetaHammer.Infrastructure.Neo4j.Tests", "MetaHammer.Infrastructure.Neo4j.Tests\MetaHammer.Infrastructure.Neo4j.Tests.csproj", "{D059C7A2-787E-4FF6-9FFE-A8484C1F166C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C7DD0455-91B1-47E3-A67F-D37A11CAFE4D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7DD0455-91B1-47E3-A67F-D37A11CAFE4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7DD0455-91B1-47E3-A67F-D37A11CAFE4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7DD0455-91B1-47E3-A67F-D37A11CAFE4D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3C31E161-F243-4830-924A-53470F8AD9E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C31E161-F243-4830-924A-53470F8AD9E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C31E161-F243-4830-924A-53470F8AD9E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C31E161-F243-4830-924A-53470F8AD9E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1BCB3E82-245A-4150-B788-23E1AABFA372}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1BCB3E82-245A-4150-B788-23E1AABFA372}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1BCB3E82-245A-4150-B788-23E1AABFA372}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1BCB3E82-245A-4150-B788-23E1AABFA372}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7D572FE-2B44-4757-9CED-48DD9A6495AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7D572FE-2B44-4757-9CED-48DD9A6495AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7D572FE-2B44-4757-9CED-48DD9A6495AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7D572FE-2B44-4757-9CED-48DD9A6495AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE4D24CE-A85C-4D06-B6CF-A9F45B175BD2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE4D24CE-A85C-4D06-B6CF-A9F45B175BD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE4D24CE-A85C-4D06-B6CF-A9F45B175BD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE4D24CE-A85C-4D06-B6CF-A9F45B175BD2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A75A7F13-8035-4DA9-9F42-2D969FDCC188}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A75A7F13-8035-4DA9-9F42-2D969FDCC188}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A75A7F13-8035-4DA9-9F42-2D969FDCC188}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A75A7F13-8035-4DA9-9F42-2D969FDCC188}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D059C7A2-787E-4FF6-9FFE-A8484C1F166C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D059C7A2-787E-4FF6-9FFE-A8484C1F166C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D059C7A2-787E-4FF6-9FFE-A8484C1F166C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D059C7A2-787E-4FF6-9FFE-A8484C1F166C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C7DD0455-91B1-47E3-A67F-D37A11CAFE4D} = {AE5B20F6-3A9D-4249-AF57-045EB8506B64}
+		{3C31E161-F243-4830-924A-53470F8AD9E0} = {5D5DC430-6A6A-40F3-B0A3-77807D6BA83C}
+		{1BCB3E82-245A-4150-B788-23E1AABFA372} = {5D5DC430-6A6A-40F3-B0A3-77807D6BA83C}
+		{B7D572FE-2B44-4757-9CED-48DD9A6495AF} = {5D5DC430-6A6A-40F3-B0A3-77807D6BA83C}
+		{DE4D24CE-A85C-4D06-B6CF-A9F45B175BD2} = {6150AA33-6E43-4ACE-8875-E7E51A36116F}
+		{A75A7F13-8035-4DA9-9F42-2D969FDCC188} = {E2D2CA0C-FB49-4AEE-BA59-174D6E2D9557}
+		{D059C7A2-787E-4FF6-9FFE-A8484C1F166C} = {9A9E5D37-2730-4540-878A-554B9D7E9EAA}
+	EndGlobalSection
+EndGlobal
