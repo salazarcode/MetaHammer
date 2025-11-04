@@ -13,6 +13,7 @@ namespace Infrastructure.Repository.Neo4j.Repositories.Base;
 /// <summary>
 /// Implementación base abstracta para repositorios Neo4j.
 /// Proporciona funcionalidad CRUD común para nodos y métodos protegidos para gestionar relaciones.
+/// Esta versión soporta la creación de nodos con múltiples etiquetas para polimorfismo.
 /// </summary>
 public abstract class RepositoryBase<TEntity, TId> : IRepository<TEntity, TId> where TEntity : class
 {
@@ -21,8 +22,9 @@ public abstract class RepositoryBase<TEntity, TId> : IRepository<TEntity, TId> w
 
     /// <summary>
     /// La etiqueta principal del nodo en Neo4j (ej. "User", "Type").
+    /// Esta etiqueta se usa para TODAS las consultas de coincidencia (MATCH).
     /// </summary>
-    protected abstract string NodeLabel { get; }
+    protected abstract IEnumerable<string> NodeLabels { get; }
 
     /// <summary>
     /// El nombre de la propiedad que actúa como identificador único (ej. "Guid").
@@ -55,6 +57,23 @@ public abstract class RepositoryBase<TEntity, TId> : IRepository<TEntity, TId> w
     protected abstract TId GetEntityId(TEntity entity);
 
     // ---
+    // --- NUEVO MÉTODO (VIRTUAL) ---
+    // ---
+
+    /// <summary>
+    /// Obtiene la lista de etiquetas para un nodo en el momento de la creación.
+    /// Los repositorios especializados pueden sobrescribir esto para añadir etiquetas
+    /// polimórficas (ej. :Type:ComplexType).
+    /// </summary>
+    /// <param name="entity">La entidad que se va a crear.</param>
+    /// <returns>Una colección de strings de etiquetas.</returns>
+    protected virtual IEnumerable<string> GetNodeLabels(TEntity entity)
+    {
+        // Por defecto, solo usa la etiqueta base.
+        return new[] { NodeLabels.First() };
+    }
+
+    // ---
     // --- Métodos CRUD de Nodos (Implementación genérica)
     // ---
 
@@ -62,29 +81,38 @@ public abstract class RepositoryBase<TEntity, TId> : IRepository<TEntity, TId> w
     {
         var parameters = MapToParameters(entity);
         
-        // El parámetro Cypher se llama '$properties' para evitar colisión con 'params'
+        // --- LÓGICA MODIFICADA ---
+        // 1. Obtener todas las etiquetas (base y especializadas)
+        var labels = GetNodeLabels(entity);
+        // 2. Crear el string de etiquetas sanitizado para Cypher (ej. :`Type`:`ComplexType`)
+        var labelString = string.Join(":", labels.Select(SanitizeLabel));
+        // --- FIN DE LA MODIFICACIÓN ---
+
         var queryString = $@"
-            CREATE (n:{NodeLabel})
+            CREATE (n:{labelString}) 
             SET n = $properties
             RETURN n";
 
-        // Creamos un objeto Query que encapsula la consulta y los parámetros.
         var query = new Query(queryString, new { properties = parameters });
 
         return await DataAccess.ExecuteWriteAsync(async tx =>
         {
             var cursor = await tx.RunAsync(query);
-            // SingleAsync() no usa CT; la cancelación es manejada por ExecuteWriteAsync
             var record = await cursor.SingleAsync(); 
-            Logger.LogInformation("{NodeLabel} with ID {Id} created.", NodeLabel, GetEntityId(entity));
+            Logger.LogInformation("Nodo con etiquetas [{Labels}] e ID {Id} creado.", labelString, GetEntityId(entity));
             return MapFromNode(record["n"].As<INode>());
         }, cancellationToken);
     }
 
+    // Los métodos GetById, GetAll, Update y Delete no cambian.
+    // Usan 'NodeLabel' para las operaciones MATCH, que es eficiente
+    // y encontrará los nodos independientemente de sus otras etiquetas.
+
     public virtual async Task<TEntity?> GetByIdAsync(TId id, CancellationToken cancellationToken = default)
     {
+        var labelsForMatch = string.Join(":", NodeLabels.Select(l => l.Trim()).Where(l => !string.IsNullOrWhiteSpace(l)));
         var query = $@"
-            MATCH (n:{NodeLabel})
+            MATCH (n:{labelsForMatch})
             WHERE n.`{IdPropertyName}` = $id
             RETURN n";
 
@@ -92,18 +120,16 @@ public abstract class RepositoryBase<TEntity, TId> : IRepository<TEntity, TId> w
         {
             object idParam = id is Guid g ? g.ToString() : id!;
             var cursor = await tx.RunAsync(query, new { id = idParam });
-            
-            // Usamos ToListAsync().FirstOrDefault() para emular SingleOrDefault
             var records = await cursor.ToListAsync(cancellationToken);
             var record = records.FirstOrDefault();
-            
             return record != null ? MapFromNode(record["n"].As<INode>()) : null;
         }, cancellationToken);
     }
 
     public virtual async Task<IEnumerable<TEntity>> GetAllAsync(CancellationToken cancellationToken = default)
     {
-        var query = $"MATCH (n:{NodeLabel}) RETURN n";
+        var labelsForMatch = string.Join(":", NodeLabels.Select(l => l.Trim()).Where(l => !string.IsNullOrWhiteSpace(l)));
+        var query = $"MATCH (n:{labelsForMatch}) RETURN n";
         return await DataAccess.ExecuteReadAsync(async tx =>
         {
             var cursor = await tx.RunAsync(query);
@@ -118,58 +144,56 @@ public abstract class RepositoryBase<TEntity, TId> : IRepository<TEntity, TId> w
         var id = GetEntityId(entity);
         object idParam = id is Guid g ? g.ToString() : id!;
         
-        // El parámetro se llama 'props' para evitar colisiones
         var setClauses = string.Join(", ", parameters.Keys.Where(k => k != IdPropertyName).Select(k => $"n.`{k}` = $props.`{k}`"));
         
+        var labelsForMatch = string.Join(":", NodeLabels.Select(l => l.Trim()).Where(l => !string.IsNullOrWhiteSpace(l)));
         var queryString = $@"
-             MATCH (n:{NodeLabel} {{`{IdPropertyName}`: $id}})
+             MATCH (n:{labelsForMatch} {{`{IdPropertyName}`: $id}})
              SET {setClauses}
              RETURN n";
 
-        var query = new Query(queryString, new { id = idParam, props = parameters });
+        var neoQuery = new Query(queryString, new { id = idParam, props = parameters });
 
         return await DataAccess.ExecuteWriteAsync(async tx =>
         {
-            var cursor = await tx.RunAsync(query);
-            var record = await cursor.SingleAsync(); // No usa CT
-            Logger.LogInformation("{NodeLabel} with ID {Id} updated.", NodeLabel, id);
+            var cursor = await tx.RunAsync(neoQuery);
+            var record = await cursor.SingleAsync();
+            Logger.LogInformation("Nodo con etiquetas [{Labels}] y ID {Id} actualizado.", labelsForMatch, id);
             return MapFromNode(record["n"].As<INode>());
         }, cancellationToken);
     }
 
     public virtual async Task<bool> DeleteAsync(TId id, CancellationToken cancellationToken = default)
     {
+        var labelsForMatch = string.Join(":", NodeLabels.Select(l => l.Trim()).Where(l => !string.IsNullOrWhiteSpace(l)));
         var query = $@"
-             MATCH (n:{NodeLabel} {{`{IdPropertyName}`: $id}})
+             MATCH (n:{labelsForMatch} {{`{IdPropertyName}`: $id}})
              DETACH DELETE n
-             RETURN count(n) as deletedCount"; // Devolvemos un conteo
+             RETURN count(n) as deletedCount";
 
         object idParam = id is Guid g ? g.ToString() : id!;
 
         return await DataAccess.ExecuteWriteAsync(async tx =>
         {
             var cursor = await tx.RunAsync(query, new { id = idParam });
-            var record = await cursor.SingleAsync(); // No usa CT
+            var record = await cursor.SingleAsync();
             var deletedCount = record["deletedCount"].As<long>();
 
             if (deletedCount > 0)
             {
-                Logger.LogInformation("{NodeLabel} with ID {Id} deleted.", NodeLabel, id);
+                Logger.LogInformation("Nodo(s) con etiquetas [{Labels}] y ID {Id} eliminado(s).", labelsForMatch, id);
                 return true;
             }
             
-            Logger.LogWarning("{NodeLabel} with ID {Id} not found for deletion.", NodeLabel, id);
+            Logger.LogWarning("Nodo(s) con etiquetas [{Labels}] y ID {Id} no encontrado(s) para eliminación.", labelsForMatch, id);
             return false;
         }, cancellationToken);
     }
 
     // ---
-    // --- Métodos de Relación Protegidos (Para uso de repositorios especializados)
+    // --- Métodos de Relación Protegidos (Sin cambios)
     // ---
-
-    /// <summary>
-    /// Crea una nueva relación entre dos nodos cualesquiera, identificados por sus Guids.
-    /// </summary>
+    
     protected async Task CreateRelationshipAsync(
         Guid fromNodeId, 
         Guid toNodeId, 
@@ -195,9 +219,6 @@ public abstract class RepositoryBase<TEntity, TId> : IRepository<TEntity, TId> w
         }, cancellationToken);
     }
 
-    /// <summary>
-    /// Elimina una relación entre dos nodos basada en sus Guids y el tipo de relación.
-    /// </summary>
     protected async Task DeleteRelationshipAsync(
         Guid fromNodeId, 
         Guid toNodeId, 
@@ -217,5 +238,34 @@ public abstract class RepositoryBase<TEntity, TId> : IRepository<TEntity, TId> w
                 toId = toNodeId.ToString()
             });
         }, cancellationToken);
+    }
+
+    // ---
+    // --- NUEVO MÉTODO HELPER (PRIVADO) ---
+    // ---
+
+    /// <summary>
+    /// Sanitiza un string para ser usado como etiqueta o tipo de relación en Cypher
+    /// para prevenir inyecciones de Cypher, envolviéndolo en backticks.
+    /// </summary>
+    private string SanitizeLabel(string label)
+    {
+        // Validar entrada básica
+        if (string.IsNullOrWhiteSpace(label))
+        {
+            throw new ArgumentException($"Nombre de etiqueta inválido: '{label}'");
+        }
+
+        // Rechazar carácteres que rompan la sintaxis Cypher: backtick y ':' (separador de etiquetas)
+        if (label.Contains('`') || label.Contains(':') || label.Any(char.IsControl))
+        {
+            throw new ArgumentException($"Nombre de etiqueta inválido: '{label}'");
+        }
+
+        // Normalizar (quitar espacios sobrantes)
+        var trimmed = label.Trim();
+
+        // Envolvemos en backticks para soportar mayúsculas, guiones, espacios, etc.
+        return $"`{trimmed}`";
     }
 }

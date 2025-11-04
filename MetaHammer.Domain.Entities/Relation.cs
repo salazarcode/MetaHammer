@@ -35,7 +35,7 @@ public class Relation
     /// </summary>
     public List<Property> Properties { get; set; } = new();
 
-    public Relation(string name, ComplexType complexType, bool isArray = false)
+    public Relation(string name, ComplexType complexType, bool isArray = false, List<Property>? properties = null)
     {
         if (string.IsNullOrWhiteSpace(name))
             throw new ArgumentException("El nombre de la relación no puede estar vacío.", nameof(name));
@@ -43,5 +43,6 @@ public class Relation
         Name = name;
         Type = complexType ?? throw new ArgumentNullException(nameof(complexType));
         IsArray = isArray;
+        Properties = properties ?? new();
     }
 }
