@@ -1,6 +1,6 @@
 namespace Infrastructure.Repository.Neo4j.Interfaces;
 
-public interface IRepository<TEntity, TId> where TEntity : class
+public interface IRepository<TEntity, in TId> where TEntity : class
 {
     Task<TEntity?> GetByIdAsync(TId id, CancellationToken cancellationToken = default);
     Task<IEnumerable<TEntity>> GetAllAsync(CancellationToken cancellationToken = default);

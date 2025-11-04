@@ -6,4 +6,8 @@
         <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Infrastructure.Repository.Neo4j\Infrastructure.Repository.Neo4j.csproj" />
+    </ItemGroup>
+
 </Project>

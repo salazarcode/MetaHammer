@@ -1,3 +1,6 @@
+using Infrastructure.Repository.Neo4j;
+using Infrastructure.Repository.Neo4j.Configuration;
+using Infrastructure.Repository.Neo4j.Interfaces;
 using MetaHammer.Presentation.Web.Components;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -5,6 +8,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+builder.Services.Configure<Neo4JOptions>(builder.Configuration.GetSection("Neo4J"));
+builder.Services.AddSingleton<INeo4JDataAccess, Neo4JDataAccess>();
 
 var app = builder.Build();
 

@@ -5,7 +5,7 @@ namespace Infrastructure.Repository.Neo4j.Configuration;
 /// <summary>
 /// Opciones de configuración tipada para Neo4j
 /// </summary>
-public class Neo4jOptions
+public class Neo4JOptions
 {
     public const string SectionName = "Neo4j";
 
