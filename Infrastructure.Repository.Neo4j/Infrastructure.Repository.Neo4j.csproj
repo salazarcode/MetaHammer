@@ -8,7 +8,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\MetaHammer.Domain.Entities\MetaHammer.Domain.Entities.csproj" />
-      <ProjectReference Include="..\MetaHammer.Domain.Interfaces\MetaHammer.Domain.Interfaces.csproj" />
     </ItemGroup>
 
     <ItemGroup>
