@@ -240,10 +240,6 @@ public abstract class RepositoryBase<TEntity, TId> : IRepository<TEntity, TId> w
         }, cancellationToken);
     }
 
-    // ---
-    // --- NUEVO MÉTODO HELPER (PRIVADO) ---
-    // ---
-
     /// <summary>
     /// Sanitiza un string para ser usado como etiqueta o tipo de relación en Cypher
     /// para prevenir inyecciones de Cypher, envolviéndolo en backticks.

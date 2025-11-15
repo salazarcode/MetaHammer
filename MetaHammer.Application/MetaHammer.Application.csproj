@@ -7,6 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Infrastructure.Repository.Neo4j\Infrastructure.Repository.Neo4j.csproj" />
       <ProjectReference Include="..\MetaHammer.Domain.Entities\MetaHammer.Domain.Entities.csproj" />
     </ItemGroup>
 
