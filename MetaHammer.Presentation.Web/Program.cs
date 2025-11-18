@@ -1,6 +1,7 @@
 using Infrastructure.Repository.Neo4j;
 using Infrastructure.Repository.Neo4j.Configuration;
 using Infrastructure.Repository.Neo4j.Interfaces;
+using MetaHammer.Domain.Interfaces.Repositories;
 using MetaHammer.Presentation.Web.Components;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,10 +25,10 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseStaticFiles();
 
 app.UseAntiforgery();
 
-app.MapStaticAssets();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 

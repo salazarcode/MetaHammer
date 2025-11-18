@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Infrastructure.Repository.Neo4j.Interfaces;
+using MetaHammer.Domain.Interfaces.Repositories;
 using Microsoft.Extensions.Logging;
 using Neo4j.Driver;
 using ILogger = Microsoft.Extensions.Logging.ILogger;

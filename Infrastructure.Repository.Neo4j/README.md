@@ -655,10 +655,9 @@ public interface IUserRepository : IRepository<User, Guid>
 ### Paso 3: Implementa el Repositorio
 
 ```csharp
-using Infrastructure.Repository.Neo4j.Interfaces;
+using MetaHammer.Domain.Interfaces.Repositories;
 using Infrastructure.Repository.Neo4j.Repositories.Base;
 using MetaHammer.Domain.Entities;
-using MetaHammer.Domain.Interfaces.Repositories;
 using Microsoft.Extensions.Logging;
 using Neo4j.Driver;
 

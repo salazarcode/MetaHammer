@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using Infrastructure.Repository.Neo4j.Configuration;
 using Infrastructure.Repository.Neo4j.Interfaces;
+using MetaHammer.Domain.Interfaces.Repositories;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Neo4j.Driver;

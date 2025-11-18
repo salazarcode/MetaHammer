@@ -1,5 +1,6 @@
 using Infrastructure.Repository.Neo4j;
 using Infrastructure.Repository.Neo4j.Interfaces;
+using MetaHammer.Domain.Interfaces.Repositories;
 using Infrastructure.Repository.Neo4j.Repositories.Base;
 using Infrastructure.Repository.Neo4j.Configuration;
 using Microsoft.Extensions.Logging;
