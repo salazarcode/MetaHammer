@@ -32,34 +32,34 @@ public class ComplexTypeTests
         companyType.AddProperty("address", voAddress);
 
         //INSTANCES
-        
-        var companyInstance = new ComplexInstance(Guid.NewGuid(), companyType);
+
+        var companyInstance = companyType.CreateInstance();
         companyInstance.SetPropertyValue("name", "MetaHammer Inc.");
         companyInstance.SetPropertyValue("city", "New York");
 
-        var address = new ValueObjectInstance(voAddress);
+        var address = voAddress.CreateInstance();
         address.SetPropertyValue("street", "123 Main St");
         address.SetPropertyValue("city", "New York");
         address.SetPropertyValue("zip_code", "10001");
         
         companyInstance.SetPropertyValue("address", address);
         
-        var person = new ComplexInstance(Guid.NewGuid(), personType);
+        var person = personType.CreateInstance();
         person.SetPropertyValue("first_name", "John");
         person.SetPropertyValue("middle_name", "A.");
         person.SetPropertyValue("last_name", "Doe");
         person.SetPropertyValue("birth_date", new DateTime(1989, 5, day: 17));
         person.SetPropertyValue("address", address);
-        
-        var email1 = new ValueObjectInstance(voEmail);
+
+        var email1 = voEmail.CreateInstance();
         email1.SetPropertyValue("email_account", "salazarcode");
         email1.SetPropertyValue("email_provider", "gmail.com");
         
-        var email2 = new ValueObjectInstance(voEmail);
+        var email2 = voEmail.CreateInstance();
         email2.SetPropertyValue("email_account", "andresalteclado");
         email2.SetPropertyValue("email_provider", "gmail.com");
         
-        var email3 = new ValueObjectInstance(voEmail);
+        var email3 = voEmail.CreateInstance();
         email3.SetPropertyValue("email_account", "jeronimo");
         email3.SetPropertyValue("email_provider", "gmail.com");
         
