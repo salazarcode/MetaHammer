@@ -1,5 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
+# 
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1. Presentation", "1. Presentation", "{AE5B20F6-3A9D-4249-AF57-045EB8506B64}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3. Domain", "3. Domain", "{5D5DC430-6A6A-40F3-B0A3-77807D6BA83C}"
@@ -11,6 +12,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetaHammer.Application", "MetaHammer.Application\MetaHammer.Application.csproj", "{DE4D24CE-A85C-4D06-B6CF-A9F45B175BD2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetaHammer.Domain", "MetaHammer.Domain\MetaHammer.Domain.csproj", "{B3F6EE17-F244-4924-92AD-5000501D1DDE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5. Tests", "5. Tests", "{D6DF47BA-68BF-4967-A193-FFFC55555AA1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetaHammer.Domain.Tests", "MetaHammer.Domain.Tests\MetaHammer.Domain.Tests.csproj", "{84F1D5AA-735F-4A1C-8431-8EBDA35E7D66}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,9 +31,14 @@ Global
 		{B3F6EE17-F244-4924-92AD-5000501D1DDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B3F6EE17-F244-4924-92AD-5000501D1DDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B3F6EE17-F244-4924-92AD-5000501D1DDE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84F1D5AA-735F-4A1C-8431-8EBDA35E7D66}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84F1D5AA-735F-4A1C-8431-8EBDA35E7D66}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84F1D5AA-735F-4A1C-8431-8EBDA35E7D66}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84F1D5AA-735F-4A1C-8431-8EBDA35E7D66}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{DE4D24CE-A85C-4D06-B6CF-A9F45B175BD2} = {6150AA33-6E43-4ACE-8875-E7E51A36116F}
 		{B3F6EE17-F244-4924-92AD-5000501D1DDE} = {5D5DC430-6A6A-40F3-B0A3-77807D6BA83C}
+		{84F1D5AA-735F-4A1C-8431-8EBDA35E7D66} = {D6DF47BA-68BF-4967-A193-FFFC55555AA1}
 	EndGlobalSection
 EndGlobal

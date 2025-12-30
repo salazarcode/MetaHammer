@@ -4,11 +4,10 @@ using MetaHammer.Domain.Types;
 
 namespace MetaHammer.Domain.Instances;
 
-public class ValueObjectInstance : MetaInstanceWithProperties, IPropertyValue
+public class ValueObjectInstance : MetaInstanceWithProperties, IInstanceProperty
 {
     public ValueObjectInstance(ValueObjectType type)
     {
-        Guid = Guid.NewGuid();
         Type = type;
     }
 }
