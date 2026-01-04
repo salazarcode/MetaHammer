@@ -6,4 +6,14 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <Folder Include="Features\Instances\" />
+      <Folder Include="Features\Types\" />
+      <Folder Include="Interfaces\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\MetaHammer.Domain\MetaHammer.Domain.csproj" />
+    </ItemGroup>
+
 </Project>

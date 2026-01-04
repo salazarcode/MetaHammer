@@ -4,44 +4,40 @@ using MetaHammer.Domain.Types.Methods;
 namespace MetaHammer.Domain.Types.Abstract;
 
 /// <summary>
-/// Clase base abstracta para tipos que tienen estructura (propiedades y métodos).
-/// Hereda de <see cref="MetaType"/> y es base para <see cref="ComplexType"/> y <see cref="ValueObjectType"/>.
+/// Abstract base class for all structural types (e.g., classes, structs).
+/// It includes ValueObjectsTypes and ComplexTypes.
+/// It has properties and methods.
 /// </summary>
 public abstract class StructuralType : MetaType, IStructuralType
 {
-    private List<PropertyDefinition> properties = new();
-    private List<Method> methods = new();
+    private List<PropertyDefinition> _properties = new();
+    private List<Method> _methods = new();
 
-    /// <summary>
-    /// Colección de definiciones de propiedades del tipo.
-    /// </summary>
-    public IReadOnlyCollection<PropertyDefinition> Properties => properties.AsReadOnly();
+    public IReadOnlyCollection<PropertyDefinition> Properties => _properties.AsReadOnly();
 
-    /// <summary>
-    /// Colección de métodos definidos en el tipo.
-    /// </summary>
-    public IReadOnlyCollection<Method> Methods => methods.AsReadOnly();
+    public IReadOnlyCollection<Method> Methods => _methods.AsReadOnly();
 
-    /// <summary>
-    /// Obtiene los métodos marcados como constructores.
-    /// </summary>
-    /// <returns>Colección de métodos donde <see cref="Method.IsConstructor"/> es true.</returns>
-    public IReadOnlyCollection<Method> GetConstructors() => methods.Where(m => m.IsConstructor).ToList().AsReadOnly();
+    public IReadOnlyCollection<Method> Constructors() => _methods.Where(m => m.IsConstructor).ToList().AsReadOnly();
 
-    /// <summary>
-    /// Agrega una definición de propiedad al tipo.
-    /// </summary>
-    /// <param name="name">Nombre de la propiedad en formato snake_case.</param>
-    /// <param name="type">Tipo de la propiedad (primitivo o ValueObject).</param>
-    /// <param name="isArray">Indica si la propiedad puede contener múltiples valores.</param>
+    public StructuralType(Guid guid, string name) : base(guid, name)
+    {
+    }
     public void AddProperty(string name, IPropertyType type, bool isArray = false)
     {
-        properties.Add(new PropertyDefinition
-        {
-            Guid = Guid.NewGuid(),
-            Name = name,
-            IsArray = isArray,
-            Type = type
-        });
+        _properties.Add(new PropertyDefinition(name, type, isArray));
     }
+
+    protected Method AddMethod(string name, MetaType? returnType, bool returnsArray = false, bool isStatic = false)
+    {
+        var method = new Method(name, returnType, returnsArray, isStatic);
+        _methods.Add(method);
+        return method;
+    }
+
+    protected Method AddConstructor()
+    {
+        var method = new Method("_constructor", null, false, false, true);
+        _methods.Add(method);
+        return method;
+    } 
 }

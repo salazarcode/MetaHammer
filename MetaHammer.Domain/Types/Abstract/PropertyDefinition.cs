@@ -1,41 +1,20 @@
+using MetaHammer.Domain.Common;
 using MetaHammer.Domain.Types.Interfaces;
 using MetaHammer.Domain.Validation;
 
 namespace MetaHammer.Domain.Types.Abstract;
 
-/// <summary>
-/// Define la estructura de una propiedad dentro de un tipo estructural.
-/// Especifica el nombre, tipo y si puede contener múltiples valores.
-/// </summary>
-public class PropertyDefinition
+public class PropertyDefinition : Entity
 {
-    private string _name = string.Empty;
+    public string Name { get; private set; }
+    public IPropertyType Type { get; private set; }
+    public bool IsArray { get; private set; }
 
-    /// <summary>
-    /// Identificador único de la definición de propiedad.
-    /// </summary>
-    public Guid Guid { get; set; }
-
-    /// <summary>
-    /// Nombre de la propiedad en formato snake_case (ej: "first_name", "order_date").
-    /// </summary>
-    public string Name
+    public PropertyDefinition(string name, IPropertyType type, bool isArray) : base(System.Guid.NewGuid())
     {
-        get => _name;
-        set
-        {
-            NameFormatValidator.ValidateSnakeCase(value, "Property");
-            _name = value;
-        }
+        NameFormatValidator.ValidateSnakeCase(name, "Property");
+        Name = name;
+        Type = type;
+        IsArray = isArray;
     }
-
-    /// <summary>
-    /// Indica si la propiedad puede contener múltiples valores (colección).
-    /// </summary>
-    public bool IsArray { get; set; } = false;
-
-    /// <summary>
-    /// Tipo de la propiedad. Puede ser un <see cref="PrimitiveType"/> o <see cref="ValueObjectType"/>.
-    /// </summary>
-    public IPropertyType Type { get; set; } = null!;
 }

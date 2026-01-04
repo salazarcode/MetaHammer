@@ -1,46 +1,24 @@
+using MetaHammer.Domain.Common;
 using MetaHammer.Domain.Validation;
 
 namespace MetaHammer.Domain.Types.Abstract;
 
-/// <summary>
-/// Define una relación entre tipos complejos.
-/// Especifica el tipo destino, cardinalidad y si es una composición.
-/// </summary>
-public class RelationDefinition
+public class RelationDefinition : Entity
 {
-    private string _name = string.Empty;
+    public string Name { get; private set; }
 
-    /// <summary>
-    /// Identificador único de la definición de relación.
-    /// </summary>
-    public Guid Guid { get; set; }
+    public bool IsArray { get; private set; }
 
-    /// <summary>
-    /// Nombre de la relación en formato snake_case (ej: "has_orders", "belongs_to").
-    /// </summary>
-    public string Name
+    public bool IsComposition { get; private set; }
+
+    public ComplexType Type { get; private set; }
+
+    public RelationDefinition(string name, ComplexType complexType, bool isComposition, bool isArray) : base(System.Guid.NewGuid())
     {
-        get => _name;
-        set
-        {
-            NameFormatValidator.ValidateSnakeCase(value, "Relation");
-            _name = value;
-        }
+        NameFormatValidator.ValidateSnakeCase(name, "Relation");
+        this.Name = name;
+        Type = complexType;
+        IsComposition = isComposition;
+        IsArray = isArray;
     }
-
-    /// <summary>
-    /// Indica si la relación puede apuntar a múltiples instancias (uno a muchos).
-    /// </summary>
-    public bool IsArray { get; set; } = false;
-
-    /// <summary>
-    /// Indica si es una composición (el hijo no puede existir sin el padre).
-    /// En caso de eliminación del padre, los hijos se eliminan en cascada.
-    /// </summary>
-    public bool IsComposition { get; set; } = false;
-
-    /// <summary>
-    /// Tipo complejo destino de la relación.
-    /// </summary>
-    public ComplexType Type { get; set; } = null!;
 }

@@ -3,18 +3,11 @@ using MetaHammer.Domain.Types.Abstract;
 namespace MetaHammer.Domain.Instances.Abstract;
 
 /// <summary>
-/// Clase base abstracta para todas las instancias del sistema.
-/// Una instancia es un objeto concreto creado a partir de un meta-tipo.
+/// Abstract base class for all meta instances.
 /// </summary>
-public abstract class MetaInstance
+public abstract class MetaInstance(Guid guid, MetaType metaType)
 {
-    /// <summary>
-    /// Identificador único de la instancia.
-    /// </summary>
-    public Guid Guid { get; protected set; } = Guid.NewGuid();
+    public Guid Guid { get; protected set; } = guid;
 
-    /// <summary>
-    /// Meta-tipo del cual se creó esta instancia.
-    /// </summary>
-    public MetaType Type { get; init; }
+    public required MetaType Type { get; init; } = metaType;
 }
