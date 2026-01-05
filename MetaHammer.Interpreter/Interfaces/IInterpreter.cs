@@ -1,4 +1,4 @@
-using MetaHammer.Domain.Instances.Abstract;
+using MetaHammer.Domain.Instances.Base;
 
 namespace MetaHammer.Interpreter.Interfaces;
 
@@ -16,9 +16,9 @@ public interface IInterpreter
     /// <param name="arguments">Los argumentos concretos (instancias) pasados al método.</param>
     /// <returns>Una instancia que representa el resultado de la ejecución.</returns>
     /// <exception cref="MetaExecutionException">Se lanza si ocurre un error durante la interpretación.</exception>
-    MetaInstance? Execute(
+    Instance? Execute(
         Context context, 
         Guid guid,
         string methodName, 
-        params MetaInstance[] arguments);
+        params Instance[] arguments);
 }

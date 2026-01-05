@@ -1,4 +1,4 @@
-using MetaHammer.Domain.Instances.Abstract;
+using MetaHammer.Domain.Instances.Base;
 using MetaHammer.Interpreter.Interfaces;
 
 namespace MetaHammer.Interpreter.Methods;
@@ -9,7 +9,7 @@ public class CreateInstance(Context? context) : INativeMethod
 
     public Context? Context { get; } = context;
         
-    public MetaInstance Run(params MetaInstance[]? arguments)
+    public Instance Run(params Instance[]? arguments)
     {
         throw new NotImplementedException();
     }

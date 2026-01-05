@@ -1,4 +1,4 @@
-using MetaHammer.Domain.Instances.Abstract;
+using MetaHammer.Domain.Instances.Base;
 
 namespace MetaHammer.Interpreter.Interfaces;
 
@@ -7,5 +7,5 @@ public interface INativeMethod
     string Name { get; }
     Context? Context { get; }
     
-    MetaInstance Run(params MetaInstance[]? arguments);
+    Instance Run(params Instance[]? arguments);
 }

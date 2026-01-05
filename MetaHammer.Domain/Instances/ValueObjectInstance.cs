@@ -1,9 +1,8 @@
-using MetaHammer.Domain.Instances.Abstract;
-using MetaHammer.Domain.Instances.Interfaces;
+using MetaHammer.Domain.Instances.Base;
 using MetaHammer.Domain.Types;
 
 namespace MetaHammer.Domain.Instances;
 
-public class ValueObjectInstance(Guid guid, ValueObjectType type) : StructuralInstance(guid, type), IInstanceProperty
+public class ValueObjectInstance(string name, MetaType type) : Instance(name, type)
 {
 }

@@ -1,5 +1,4 @@
 using MetaHammer.Domain.Common;
-using MetaHammer.Domain.Types.Abstract;
 
 namespace MetaHammer.Domain.Types.Methods;
 

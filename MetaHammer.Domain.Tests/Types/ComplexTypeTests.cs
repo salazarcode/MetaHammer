@@ -1,5 +1,4 @@
 using MetaHammer.Domain.Instances;
-using MetaHammer.Domain.Instances.Properties;
 using MetaHammer.Domain.Types;
 
 namespace MetaHammer.Domain.Tests.Types;

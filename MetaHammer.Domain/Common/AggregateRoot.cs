@@ -1,5 +1,3 @@
-using MetaHammer.Domain.Types.Abstract;
-
 namespace MetaHammer.Domain.Common;
 
 public abstract class AggregateRoot : Entity

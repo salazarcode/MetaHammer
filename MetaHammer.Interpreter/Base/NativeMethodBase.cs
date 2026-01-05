@@ -1,7 +1,7 @@
-using MetaHammer.Domain.Instances.Abstract;
+using MetaHammer.Domain.Instances.Base;
 using MetaHammer.Interpreter.Interfaces;
 
-namespace MetaHammer.Interpreter.NativeMethods.Abstract;
+namespace MetaHammer.Interpreter.Base;
 
 public abstract class NativeMethodBase : INativeMethod
 {
@@ -13,7 +13,7 @@ public abstract class NativeMethodBase : INativeMethod
         Context = context;
     }
     
-    public MetaInstance Run(params MetaInstance[]? arguments)
+    public Instance Run(params Instance[]? arguments)
     {
         throw new NotImplementedException();
     }
