@@ -1,4 +1,4 @@
-using MetaHammer.Domain.Instances.Base;
+using MetaHammer.Domain.Instances;
 using MetaHammer.Domain.Types.Methods;
 
 namespace MetaHammer.Interpreter;
@@ -9,7 +9,7 @@ namespace MetaHammer.Interpreter;
 /// </summary>
 public class Context
 {
-    private readonly Dictionary<string, Instance> _variables = new();
+    private readonly Dictionary<string, MetaObject> _variables = new();
     private readonly Dictionary<string, Method> _nativeMethods = new();
     private readonly Context? _parentContext;
 
@@ -18,7 +18,7 @@ public class Context
         _parentContext = parentContext;
     }
 
-    public void Set(string name, Instance value)
+    public void Set(string name, MetaObject value)
     {
         //Verifica que la variable no exista en el contexto actual y recursivamente en el padre
         if (_variables.ContainsKey(name))
@@ -28,12 +28,12 @@ public class Context
         _variables[name] = value;
     }
 
-    public Instance Get(string name)
+    public MetaObject Get(string name)
     {
         if (_variables.TryGetValue(name, out var value)) 
             return value;
         
-        // Si no está aquí, buscar en el padre (Recursividad de Scope)
+        // Si no está aquí, buscar en el padre (Recursividad de DesignContext)
         if (_parentContext != null) 
             return _parentContext.Get(name);
         

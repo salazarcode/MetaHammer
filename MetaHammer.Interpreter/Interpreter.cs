@@ -1,4 +1,4 @@
-using MetaHammer.Domain.Instances.Base;
+using MetaHammer.Domain.Instances;
 using MetaHammer.Interpreter.Interfaces;
 
 namespace MetaHammer.Interpreter;
@@ -9,9 +9,9 @@ public class Interpreter : IInterpreter
     {
     }
 
-    public Instance? Execute(Context context, Guid contextVariableGuid, string methodName, params Instance[] arguments)
+    public MetaObject? Execute(Context context, Guid contextVariableGuid, string methodName, params MetaObject[] arguments)
     {
-        // Instance? instance = null;//context.GetVariable(guid);
+        // MetaObject? instance = null;//context.GetVariable(guid);
         //
         // var method = instance.Methods.FirstOrDefault(m => m.Name == methodName);
         //

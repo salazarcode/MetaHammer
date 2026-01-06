@@ -8,22 +8,22 @@ namespace MetaHammer.Domain.Types;
 
 public class MetaType: AggregateRoot
 {
-    protected MetaType(Guid guid, string name, MetaTypeNature category, bool isNative = false) : base(guid)
+    public MetaType(Guid guid, string name, MetaTypeNature nature, bool isNative = false) : base(guid)
     {
         NameFormatValidator.ValidatePascalCase(name, "Type");
         Name = name;
         Version = 1;
-        Category = category;
         
-        if(category != MetaTypeNature.Primitive && isNative)
+        if(nature != MetaTypeNature.Primitive && isNative)
             throw new InvalidOperationException("Solo los tipos primitivos pueden ser nativos.");
         
+        Nature = nature;
         IsNative = isNative;
     }
     
     public string Name { get; init; }
     public bool IsNative { get; init; }
-    public MetaTypeNature Category { get; init; }
+    public MetaTypeNature Nature { get; init; }
 
     #region Versioning
     public int Version { get; private set; }
@@ -43,13 +43,13 @@ public class MetaType: AggregateRoot
 
     protected Method AddMethod(string name, MetaType? returnType, bool returnsArray = false, bool isStatic = false)
     {
-        var method = new Method(name, returnType, returnsArray, isStatic);
+        var method = new Method(this.Guid, name, returnType, returnsArray, isStatic);
         _methods.Add(method);
         return method;
     }
     protected Method AddConstructor()
     {
-        var method = new Method("_constructor", null, false, false, true);
+        var method = new Method(this.Guid,"_constructor", null, false, false, true);
         _methods.Add(method);
         return method;
     }
@@ -71,13 +71,13 @@ public class MetaType: AggregateRoot
 
     public void AddProperty(string name, MetaType propertyType, bool isArray = false, bool isComposition = true)
     {
-        switch (this.Category)
+        switch (this.Nature)
         {
             case MetaTypeNature.Primitive:
                 throw new DomainException("Los tipos primitivos no pueden tener propiedades.");
                 break;
             case MetaTypeNature.ValueObject:
-                if(!(new[]{MetaTypeNature.Primitive, MetaTypeNature.ValueObject}.Contains(propertyType.Category)))
+                if(!(new[]{MetaTypeNature.Primitive, MetaTypeNature.ValueObject}.Contains(propertyType.Nature)))
                 {
                     throw new DomainException("Los tipos ValueObject solo pueden tener propiedades de tipos primitivos o de valor.");
                 }
@@ -86,13 +86,13 @@ public class MetaType: AggregateRoot
 
         var property = _properties.FirstOrDefault(p => p.Name == name && p.MetaType.Name == propertyType.Name);
         
-        if(property != null)
+        if(property == null)
         {
-            throw new DomainException($"La propiedad con nombre '{name}' y tipo {property.MetaType.Name} ya existe en el tipo '{this.Name}'.");
+            _properties.Add(new Property(this.Guid, name, propertyType, isArray, isComposition));
         }
         else
         {
-            _properties.Add(property!);
+            throw new DomainException($"La propiedad con nombre '{name}' y tipo {property.MetaType.Name} ya existe en el tipo '{this.Name}'.");
         }
     }
     

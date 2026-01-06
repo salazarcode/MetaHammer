@@ -1,64 +1,80 @@
 using MetaHammer.Domain.Instances;
 using MetaHammer.Domain.Types;
+using MetaHammer.Domain.Types.Enums;
 
 namespace MetaHammer.Domain.Tests.Types;
 
 public class ComplexTypeTests
 {
     [Fact]
-    public void CreateInstance_WithDictionary_SetsAllProperties()
+    public void CreatePrimitiveType()
     {
-        // // Arrange - Define types
-        // var voEmail = new ValueObjectType("Email");
-        // voEmail.AddProperty("email_account", PrimitiveType.String);
-        // voEmail.AddProperty("email_provider", PrimitiveType.String);
-        //
-        // var voAddress = new ValueObjectType("Address");
-        // voAddress.AddProperty("street", PrimitiveType.String);
-        // voAddress.AddProperty("city", PrimitiveType.String);
-        // voAddress.AddProperty("zip_code", PrimitiveType.String);
-        //
-        // var personType = new ComplexType("Person");
-        // personType.AddProperty("first_name", PrimitiveType.String);
-        // personType.AddProperty("last_name", PrimitiveType.String);
-        // personType.AddProperty("age", PrimitiveType.Int);
-        // personType.AddProperty("birth_date", PrimitiveType.DateTime);
-        // personType.AddProperty("address", voAddress);
-        //
-        // var companyType = new ComplexType("Company");
-        // companyType.AddProperty("name", PrimitiveType.String);
-        // companyType.AddProperty("city", PrimitiveType.String);
-        // companyType.AddProperty("address", voAddress);
-        //
-        // // Act - Create instances using anonymous objects
-        // var email = voEmail.CreateInstance(new
-        // {
-        //     email_account = "salazarcode",
-        //     email_provider = "gmail.com"
-        // });
-        //
-        // var address = voAddress.CreateInstance(new
-        // {
-        //     street = "123 Main St",
-        //     city = "New York",
-        //     zip_code = "10001"
-        // });
-        //
-        // var person = personType.Create(first_name: "John", last_name: "Doe", age: 35, birth_date: new DateTime(1989, 5, 17), address: address);
-        //
-        // // Assert
-        // Assert.Equal(5, person.PropertiesAsReadOnly.Count);
-        //
-        // var personFirstName = person.PropertiesAsReadOnly.First(p => p.Name == "first_name") as StringProperty;
-        // Assert.NotNull(personFirstName);
-        // Assert.Equal("John", personFirstName.Value);
-        //
-        // var personAge = person.PropertiesAsReadOnly.First(p => p.Name == "age") as IntProperty;
-        // Assert.NotNull(personAge);
-        // Assert.Equal(35, personAge.Value);
-        //
-        // var personAddress = person.PropertiesAsReadOnly.First(p => p.Name == "address") as ValueObjectProperty;
-        // Assert.NotNull(personAddress);
-        // Assert.Equal(3, personAddress.Value.PropertiesAsReadOnly.Count);
+        var primitiveType = new MetaType(Guid.NewGuid(), "String", MetaTypeNature.Primitive, isNative:true);
+        
+        Assert.NotNull(primitiveType);
+    }
+    [Fact]
+    public void CreateValueObjectType_AddStringProperties()
+    {
+        var stringTypeName = "String";
+        var intTypeName = "Int";
+        
+        var stringType = new MetaType(Guid.NewGuid(), stringTypeName, MetaTypeNature.Primitive, isNative:true);
+        var intType = new MetaType(Guid.NewGuid(), intTypeName, MetaTypeNature.Primitive, isNative:true);
+        
+        var valueObjectType = new MetaType(Guid.NewGuid(), "Address", MetaTypeNature.ValueObject);
+        
+        valueObjectType.AddProperty("street", stringType);
+        valueObjectType.AddProperty("city", stringType);
+        valueObjectType.AddProperty("zip_code", intType);
+        
+        Assert.NotNull(valueObjectType);
+        Assert.Contains(valueObjectType.Properties, p => p.Name == "street");
+        Assert.Contains(valueObjectType.Properties, p => p.Name == "city");
+        Assert.Contains(valueObjectType.Properties, p => p.Name == "zip_code");
+        
+        Assert.Equal(valueObjectType.Properties.First(x =>x.Name =="street").MetaType.Name, stringTypeName);
+        Assert.Equal(valueObjectType.Properties.First(x =>x.Name =="city").MetaType.Name, stringTypeName);
+        Assert.Equal(valueObjectType.Properties.First(x =>x.Name =="zip_code").MetaType.Name, intTypeName);
+        
+    }
+    
+    
+    [Fact]
+    public void CreateComplexType_AddStringProperties()
+    {
+        var stringTypeName = "String";
+        var intTypeName = "Int";
+        var decimalTypeName = "Decimal";
+        var dateTimeTypeName = "DateTime";
+        var booleanTypeName = "Boolean";
+        
+        var stringType = new MetaType(Guid.NewGuid(), stringTypeName, MetaTypeNature.Primitive, isNative:true);
+        var intType = new MetaType(Guid.NewGuid(), intTypeName, MetaTypeNature.Primitive, isNative:true);
+        var decimalType = new MetaType(Guid.NewGuid(), decimalTypeName, MetaTypeNature.Primitive, isNative:true);
+        var dateTimeType = new MetaType(Guid.NewGuid(), dateTimeTypeName, MetaTypeNature.Primitive, isNative:true);
+        var booleanType = new MetaType(Guid.NewGuid(), booleanTypeName, MetaTypeNature.Primitive, isNative:true);
+        
+        var complexType = new MetaType(Guid.NewGuid(), "Person", MetaTypeNature.Complex);
+        
+        complexType.AddProperty("first_name", stringType);
+        complexType.AddProperty("last_name", stringType);
+        complexType.AddProperty("birth_date", dateTimeType);
+        complexType.AddProperty("height", decimalType);
+        complexType.AddProperty("is_employed", booleanType);
+        
+        Assert.NotNull(complexType);
+        Assert.Contains(complexType.Properties, p => p.Name == "first_name");
+        Assert.Contains(complexType.Properties, p => p.Name == "last_name");
+        Assert.Contains(complexType.Properties, p => p.Name == "birth_date");
+        Assert.Contains(complexType.Properties, p => p.Name == "height");
+        Assert.Contains(complexType.Properties, p => p.Name == "is_employed");
+        
+        Assert.Equal(complexType.Properties.First(x =>x.Name =="first_name").MetaType.Name, stringTypeName);
+        Assert.Equal(complexType.Properties.First(x =>x.Name =="last_name").MetaType.Name, stringTypeName);
+        Assert.Equal(complexType.Properties.First(x =>x.Name =="birth_date").MetaType.Name, dateTimeTypeName);
+        Assert.Equal(complexType.Properties.First(x =>x.Name =="height").MetaType.Name, decimalTypeName);
+        Assert.Equal(complexType.Properties.First(x =>x.Name =="is_employed").MetaType.Name, booleanTypeName);
+        
     }
 }

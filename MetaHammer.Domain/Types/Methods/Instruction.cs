@@ -1,26 +1,32 @@
 using MetaHammer.Domain.Common;
 using MetaHammer.Domain.Exceptions;
-using MetaHammer.Domain.Instances.Base;
 
 namespace MetaHammer.Domain.Types.Methods;
 
 public class Instruction : Entity
 {
-    public Instruction(Method method, int order, Dictionary<Parameter, Instance> arguments) : base(System.Guid.NewGuid())
+    public Method ParentMethod { get; init; }
+    public Method InvokedMethod { get; init; }
+    public int Order { get; private set; }
+    
+    private List<Argument> _arguments { get; set; } = new();
+    public IReadOnlyCollection<Argument> Arguments => _arguments.AsReadOnly();
+    
+    public Instruction(Method parentMethod, Method invokedMethod, int order, List<Argument> arguments) : base(System.Guid.NewGuid())
     {
-        Method = method;
+        ParentMethod = parentMethod;
+        InvokedMethod = invokedMethod;
         Order = order;
 
-        foreach (var param in method.GetParameters())
+        //Verifico que todos los parametros del metodo existan en el diccionario de argumentos
+        foreach (var parameter in InvokedMethod.Parameters())
         {
-            if (!arguments.ContainsKey(param))
-                throw new DomainException($"Parameter {param.Name} from method {method.Name} does not exist in argument list.");
+            var argument = arguments.FirstOrDefault(x => x.Parameter.Name == parameter.Name);
+                
+            if(argument == null)
+                throw new DomainException($"There's no argument present for parameter '{parameter.Name}' in method '{InvokedMethod.Name}'.");
+                
+            _arguments.Add(argument);
         }
-
-        Arguments = arguments.Select(x => new Argument(x.Key, x.Value)).ToList();
     }
-    public Method Method { get; private set; }
-    public int Order { get; private set; }
-    private List<Argument> Arguments { get; set; }
-    public IReadOnlyCollection<Argument> GetArguments => Arguments.AsReadOnly();
 }
