@@ -1,7 +1,8 @@
 using MetaHammer.Domain.Common;
 using MetaHammer.Domain.Exceptions;
+using MetaHammer.Domain.Types.Entities;
 using MetaHammer.Domain.Types.Enums;
-using MetaHammer.Domain.Types.Methods;
+using MetaHammer.Domain.Types.Entities.Method;
 using MetaHammer.Domain.Validation;
 
 namespace MetaHammer.Domain.Types;
@@ -41,13 +42,13 @@ public class MetaType: AggregateRoot
 
     public IReadOnlyCollection<Method> Constructors() => _methods.Where(m => m.IsConstructor).ToList().AsReadOnly();
 
-    protected Method AddMethod(string name, MetaType? returnType, bool returnsArray = false, bool isStatic = false)
+    public Method AddMethod(string name, MetaType? returnType, bool returnsArray = false, bool isStatic = false)
     {
         var method = new Method(this.Guid, name, returnType, returnsArray, isStatic);
         _methods.Add(method);
         return method;
     }
-    protected Method AddConstructor()
+    public Method AddConstructor()
     {
         var method = new Method(this.Guid,"_constructor", null, false, false, true);
         _methods.Add(method);
@@ -65,9 +66,9 @@ public class MetaType: AggregateRoot
     #region Properties
     
 
-    private List<Property> _properties { get; set; } = new();
+    private List<MetaProperty> _properties { get; set; } = new();
     
-    public IReadOnlyCollection<Property> Properties => _properties.AsReadOnly();
+    public IReadOnlyCollection<MetaProperty> Properties => _properties.AsReadOnly();
 
     public void AddProperty(string name, MetaType propertyType, bool isArray = false, bool isComposition = true)
     {
@@ -88,7 +89,7 @@ public class MetaType: AggregateRoot
         
         if(property == null)
         {
-            _properties.Add(new Property(this.Guid, name, propertyType, isArray, isComposition));
+            _properties.Add(new MetaProperty(this.Guid, name, propertyType, isArray, isComposition));
         }
         else
         {

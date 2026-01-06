@@ -1,7 +1,7 @@
 using MetaHammer.Domain.Common;
 using MetaHammer.Domain.Exceptions;
 
-namespace MetaHammer.Domain.Types.Methods;
+namespace MetaHammer.Domain.Types.Entities.Method;
 
 public class Instruction : Entity
 {

@@ -1,5 +1,5 @@
 using MetaHammer.Domain.Instances;
-using MetaHammer.Domain.Types.Methods;
+using MetaHammer.Domain.Types.Entities.Method;
 
 namespace MetaHammer.Interpreter;
 

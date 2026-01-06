@@ -1,6 +1,6 @@
 using MetaHammer.Domain.Common;
 
-namespace MetaHammer.Domain.Types.Methods;
+namespace MetaHammer.Domain.Types.Entities.Method;
 
 public class Parameter(string name, MetaType type, int order, bool isArray = false) : Entity(System.Guid.NewGuid())
 {
