@@ -1,4 +1,3 @@
-using MetaHammer.Domain.Instances;
 using MetaHammer.Domain.Types;
 using MetaHammer.Domain.Types.Enums;
 
@@ -6,6 +5,28 @@ namespace MetaHammer.Domain.Tests.Types;
 
 public class ComplexTypeTests
 {
+    public MetaType stringType { get; set; }
+    public MetaType intType { get; set; }
+    public MetaType decimalType { get; set; }
+    public MetaType dateTimeType { get; set; }
+    public MetaType booleanType { get; set; }
+    
+    
+    public ComplexTypeTests()
+    {
+        var stringTypeName = "String";
+        var intTypeName = "Int";
+        var decimalTypeName = "Decimal";
+        var dateTimeTypeName = "DateTime";
+        var booleanTypeName = "Boolean";
+        
+        stringType = new MetaType(Guid.NewGuid(), stringTypeName, MetaTypeNature.Primitive, isNative:true);
+        intType = new MetaType(Guid.NewGuid(), intTypeName, MetaTypeNature.Primitive, isNative:true);
+        decimalType = new MetaType(Guid.NewGuid(), decimalTypeName, MetaTypeNature.Primitive, isNative:true);
+        dateTimeType = new MetaType(Guid.NewGuid(), dateTimeTypeName, MetaTypeNature.Primitive, isNative:true);
+        booleanType = new MetaType(Guid.NewGuid(), booleanTypeName, MetaTypeNature.Primitive, isNative:true);
+    }
+    
     [Fact]
     public void CreatePrimitiveType()
     {
@@ -16,12 +37,6 @@ public class ComplexTypeTests
     [Fact]
     public void CreateValueObjectType_AddStringProperties()
     {
-        var stringTypeName = "String";
-        var intTypeName = "Int";
-        
-        var stringType = new MetaType(Guid.NewGuid(), stringTypeName, MetaTypeNature.Primitive, isNative:true);
-        var intType = new MetaType(Guid.NewGuid(), intTypeName, MetaTypeNature.Primitive, isNative:true);
-        
         var valueObjectType = new MetaType(Guid.NewGuid(), "Address", MetaTypeNature.ValueObject);
         
         valueObjectType.AddProperty("street", stringType);
@@ -33,9 +48,9 @@ public class ComplexTypeTests
         Assert.Contains(valueObjectType.Properties, p => p.Name == "city");
         Assert.Contains(valueObjectType.Properties, p => p.Name == "zip_code");
         
-        Assert.Equal(valueObjectType.Properties.First(x =>x.Name =="street").MetaType.Name, stringTypeName);
-        Assert.Equal(valueObjectType.Properties.First(x =>x.Name =="city").MetaType.Name, stringTypeName);
-        Assert.Equal(valueObjectType.Properties.First(x =>x.Name =="zip_code").MetaType.Name, intTypeName);
+        Assert.Equal(valueObjectType.Properties.First(x =>x.Name =="street").MetaType.Name, stringType.Name);
+        Assert.Equal(valueObjectType.Properties.First(x =>x.Name =="city").MetaType.Name, stringType.Name);
+        Assert.Equal(valueObjectType.Properties.First(x =>x.Name =="zip_code").MetaType.Name, intType.Name);
         
     }
     
@@ -43,18 +58,6 @@ public class ComplexTypeTests
     [Fact]
     public void CreateComplexType_AddStringProperties()
     {
-        var stringTypeName = "String";
-        var intTypeName = "Int";
-        var decimalTypeName = "Decimal";
-        var dateTimeTypeName = "DateTime";
-        var booleanTypeName = "Boolean";
-        
-        var stringType = new MetaType(Guid.NewGuid(), stringTypeName, MetaTypeNature.Primitive, isNative:true);
-        var intType = new MetaType(Guid.NewGuid(), intTypeName, MetaTypeNature.Primitive, isNative:true);
-        var decimalType = new MetaType(Guid.NewGuid(), decimalTypeName, MetaTypeNature.Primitive, isNative:true);
-        var dateTimeType = new MetaType(Guid.NewGuid(), dateTimeTypeName, MetaTypeNature.Primitive, isNative:true);
-        var booleanType = new MetaType(Guid.NewGuid(), booleanTypeName, MetaTypeNature.Primitive, isNative:true);
-        
         var complexType = new MetaType(Guid.NewGuid(), "Person", MetaTypeNature.Complex);
         
         complexType.AddProperty("first_name", stringType);
@@ -70,11 +73,27 @@ public class ComplexTypeTests
         Assert.Contains(complexType.Properties, p => p.Name == "height");
         Assert.Contains(complexType.Properties, p => p.Name == "is_employed");
         
-        Assert.Equal(complexType.Properties.First(x =>x.Name =="first_name").MetaType.Name, stringTypeName);
-        Assert.Equal(complexType.Properties.First(x =>x.Name =="last_name").MetaType.Name, stringTypeName);
-        Assert.Equal(complexType.Properties.First(x =>x.Name =="birth_date").MetaType.Name, dateTimeTypeName);
-        Assert.Equal(complexType.Properties.First(x =>x.Name =="height").MetaType.Name, decimalTypeName);
-        Assert.Equal(complexType.Properties.First(x =>x.Name =="is_employed").MetaType.Name, booleanTypeName);
+        Assert.Equal(complexType.Properties.First(x =>x.Name =="first_name").MetaType.Name, stringType.Name);
+        Assert.Equal(complexType.Properties.First(x =>x.Name =="last_name").MetaType.Name, stringType.Name);
+        Assert.Equal(complexType.Properties.First(x =>x.Name =="birth_date").MetaType.Name, dateTimeType.Name);
+        Assert.Equal(complexType.Properties.First(x =>x.Name =="height").MetaType.Name, decimalType.Name);
+        Assert.Equal(complexType.Properties.First(x =>x.Name =="is_employed").MetaType.Name, booleanType.Name);
         
+    }
+
+    [Fact]
+    public void ComplexType_CreateMethod()
+    {
+        var person = new MetaType(Guid.NewGuid(), "Person", MetaTypeNature.Complex);
+        
+        person.AddProperty("first_name", stringType);
+        person.AddProperty("last_name", stringType);
+        person.AddProperty("birth_date", dateTimeType);
+
+        var constructor = person.AddConstructor();
+        constructor.AddParameter("first_name", stringType);
+        constructor.AddParameter("last_name", stringType);
+
+        var testMethod1 = person.AddMethod("GetFullName", stringType);
     }
 }

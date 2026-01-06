@@ -1,6 +1,6 @@
 using MetaHammer.Domain.Common;
 
-namespace MetaHammer.Domain.Types.Methods;
+namespace MetaHammer.Domain.Types.Entities.Method;
 
 public class Method : Entity
 {

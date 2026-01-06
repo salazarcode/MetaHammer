@@ -1,11 +1,11 @@
 using MetaHammer.Domain.Common;
 using MetaHammer.Domain.Validation;
 
-namespace MetaHammer.Domain.Types;
+namespace MetaHammer.Domain.Types.Entities;
 
-public class Property : Entity
+public class MetaProperty : Entity
 { 
-    public Property(Guid guid, string name, MetaType metaType, bool isArray = false, bool isComposition = false) : base(guid)
+    public MetaProperty(Guid guid, string name, MetaType metaType, bool isArray = false, bool isComposition = false) : base(guid)
     {
         NameFormatValidator.ValidateSnakeCase(name, "Property");
         Name = name;

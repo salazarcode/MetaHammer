@@ -18,13 +18,11 @@ public class MetaObject(MetaType type)
             case MetaTypeNature.ValueObject when obj.MetaType.Nature == MetaTypeNature.Complex:
                 throw new Exception($"Value objects can't have complex type properties.");
         }
-
-        var thisType = this.MetaType;
         
         var property = this.MetaType.Properties.FirstOrDefault(x => x.Name == name && x.MetaType.Name == obj.MetaType.Name);
         
         if (property == null)
-            throw new Exception($"Property '{name}' of type '{obj.MetaType.Name}' does not exist on type '{thisType.Name}'.");
+            throw new Exception($"Property '{name}' of type '{obj.MetaType.Name}' does not exist on type '{this.MetaType.Name}'.");
         
         if(property.IsArray)
             _properties.Add(name, obj);
