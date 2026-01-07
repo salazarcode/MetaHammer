@@ -1,10 +1,11 @@
 using MetaHammer.Domain.Common;
+using MetaHammer.Domain.Types.Interfaces;
 
 namespace MetaHammer.Domain.Types.Entities.Method;
 
 public class Method : Entity
 {
-    public Method(Guid parentTypeId, string name, MetaType? returnType, bool returnsArray = false, bool isStatic = false, bool isConstructor = false, bool isNative = false) : base(System.Guid.NewGuid())
+    public Method(Guid parentTypeId, string name, IMetaType? returnType, bool returnsArray = false, bool isStatic = false, bool isConstructor = false, bool isNative = false) : base(System.Guid.NewGuid())
     {
         ParentTypeId = parentTypeId;
         Name = name;
@@ -17,7 +18,7 @@ public class Method : Entity
     public string Name { get; private set; }
     public bool IsStatic { get; private set; }
     public bool IsConstructor { get; private set; }
-    public MetaType? ReturnType { get; set; }
+    public IMetaType? ReturnType { get; set; }
     public bool IsArray { get; private set; }
     public bool IsNative { get; private set; }
     public Guid ParentTypeId { get; private set; }
@@ -25,7 +26,7 @@ public class Method : Entity
     private List<Instruction> _instructions { get; set; } = new();
     
     [System.Text.Json.Serialization.JsonIgnore]
-    public MetaType ParentType { get; private set; }
+    public ComplexMetaType ParentType { get; private set; }
 
     public IReadOnlyCollection<Parameter> Parameters() => _parameters.AsReadOnly();
     public IReadOnlyCollection<Instruction> Instructions() => _instructions.AsReadOnly();
@@ -36,7 +37,7 @@ public class Method : Entity
     /// <param name="name"></param>
     /// <param name="type"></param>
     /// <param name="isArray"></param>
-    public void AddParameter(string name, MetaType type, bool isArray = false)
+    public void AddParameter(string name, IMetaType type, bool isArray = false)
     {
         var parameter = new Parameter(name, type, _parameters.Count + 1, isArray);
         _parameters.Add(parameter);
