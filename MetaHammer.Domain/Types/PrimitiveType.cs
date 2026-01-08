@@ -6,13 +6,13 @@ using MetaHammer.Domain.Validation;
 
 namespace MetaHammer.Domain.Types;
 
-public class PrimitiveMetaType : MetaType, IPropertyType
+public class PrimitiveType : MetaType, IPropertyType
 {
-    public PrimitiveMetaType(Guid guid, string name) : base(guid, name)
+    public PrimitiveType(Guid guid, string name) : base(guid, name)
     {
     }
 
-    public PrimitiveMetaType(string name) : base(Guid.NewGuid(), name)
+    public PrimitiveType(string name) : base(Guid.NewGuid(), name)
     {
     }
 }

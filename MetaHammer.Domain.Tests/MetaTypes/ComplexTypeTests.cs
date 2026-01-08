@@ -4,11 +4,11 @@ namespace MetaHammer.Domain.Tests.Types;
 
 public class ComplexTypeTests
 {
-    public PrimitiveMetaType stringType { get; set; }
-    public PrimitiveMetaType intType { get; set; }
-    public PrimitiveMetaType decimalType { get; set; }
-    public PrimitiveMetaType dateTimeType { get; set; }
-    public PrimitiveMetaType booleanType { get; set; }
+    public PrimitiveType stringType { get; set; }
+    public PrimitiveType intType { get; set; }
+    public PrimitiveType decimalType { get; set; }
+    public PrimitiveType dateTimeType { get; set; }
+    public PrimitiveType booleanType { get; set; }
     
     
     public ComplexTypeTests()
@@ -19,24 +19,24 @@ public class ComplexTypeTests
         var dateTimeTypeName = "DateTime";
         var booleanTypeName = "Boolean";
         
-        stringType = new PrimitiveMetaType(Guid.NewGuid(), stringTypeName);
-        intType = new PrimitiveMetaType(Guid.NewGuid(), intTypeName);
-        decimalType = new PrimitiveMetaType(Guid.NewGuid(), decimalTypeName);
-        dateTimeType = new PrimitiveMetaType(Guid.NewGuid(), dateTimeTypeName);
-        booleanType = new PrimitiveMetaType(Guid.NewGuid(), booleanTypeName);
+        stringType = new PrimitiveType(Guid.NewGuid(), stringTypeName);
+        intType = new PrimitiveType(Guid.NewGuid(), intTypeName);
+        decimalType = new PrimitiveType(Guid.NewGuid(), decimalTypeName);
+        dateTimeType = new PrimitiveType(Guid.NewGuid(), dateTimeTypeName);
+        booleanType = new PrimitiveType(Guid.NewGuid(), booleanTypeName);
     }
     
     [Fact]
     public void CreatePrimitiveType()
     {
-        var primitiveType = new PrimitiveMetaType(Guid.NewGuid(), "String");
+        var primitiveType = new PrimitiveType(Guid.NewGuid(), "String");
         
         Assert.NotNull(primitiveType);
     }
     [Fact]
     public void CreateValueObjectType_AddStringProperties()
     {
-        var valueObjectType = new ValueObjectMetaType(Guid.NewGuid(), "Address");
+        var valueObjectType = new ValueObjectType(Guid.NewGuid(), "Address");
         
         valueObjectType.AddProperty("street", stringType);
         valueObjectType.AddProperty("city", stringType);
@@ -56,7 +56,7 @@ public class ComplexTypeTests
     [Fact]
     public void CreateComplexType_AddStringProperties()
     {
-        var complexType = new ComplexMetaType(Guid.NewGuid(), "Person");
+        var complexType = new ComplexType(Guid.NewGuid(), "Person");
         
         complexType.AddProperty("first_name", stringType);
         complexType.AddProperty("last_name", stringType);
@@ -82,7 +82,7 @@ public class ComplexTypeTests
     [Fact]
     public void ComplexType_CreateMethod()
     {
-        var person = new ComplexMetaType(Guid.NewGuid(), "Person");
+        var person = new ComplexType(Guid.NewGuid(), "Person");
         
         person.AddProperty("first_name", stringType);
         person.AddProperty("last_name", stringType);

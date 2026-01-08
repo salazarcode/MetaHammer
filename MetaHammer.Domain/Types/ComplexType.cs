@@ -6,7 +6,7 @@ using MetaHammer.Domain.Types.Interfaces;
 
 namespace MetaHammer.Domain.Types;
 
-public class ComplexMetaType(Guid guid, string name, bool isNative = false): MetaTypeWithProperties(guid, name), IMetaType
+public class ComplexType(Guid guid, string name): MetaTypeWithProperties(guid, name), IMetaType
 {
     #region Relations
 
@@ -14,9 +14,9 @@ public class ComplexMetaType(Guid guid, string name, bool isNative = false): Met
     
     public IReadOnlyCollection<MetaRelation> Relations => _relations.AsReadOnly();
 
-    public void AddRelation(string name, ComplexMetaType relationType, bool isArray = false, bool isComposition = true)
+    public void AddRelation(string name, ComplexType relationType, bool isArray = false, bool isComposition = true)
     {
-        var relation = _relations.FirstOrDefault(r => r.Name == name && r.MetaType.Name == relationType.Name);
+        var relation = _relations.FirstOrDefault(r => r.Name == name && r.Type.Name == relationType.Name);
         
         if(relation == null)
         {

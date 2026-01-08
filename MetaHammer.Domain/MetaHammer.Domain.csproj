@@ -7,8 +7,4 @@
         <LangVersion>12</LangVersion>
     </PropertyGroup>
 
-    <ItemGroup>
-      <Folder Include="Types\Events\" />
-    </ItemGroup>
-
 </Project>

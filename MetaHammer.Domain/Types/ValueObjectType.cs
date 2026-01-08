@@ -5,13 +5,13 @@ using MetaHammer.Domain.Types.Interfaces;
 
 namespace MetaHammer.Domain.Types;
 
-public class ValueObjectMetaType : MetaTypeWithProperties, IPropertyType
+public class ValueObjectType : MetaTypeWithProperties, IPropertyType
 {
-    public ValueObjectMetaType(Guid guid, string name) : base(guid, name)
+    public ValueObjectType(Guid guid, string name) : base(guid, name)
     {
     }
     
-    public ValueObjectMetaType(string name) : base(Guid.NewGuid(), name)
+    public ValueObjectType(string name) : base(Guid.NewGuid(), name)
     {
     }
     

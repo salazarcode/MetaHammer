@@ -10,10 +10,10 @@ public class DesignContext
     }
     
     // Diccionario de: Nombre de Variable -> Definición del Tipo
-    private readonly Dictionary<string, ComplexMetaType> _symbols = new();
+    private readonly Dictionary<string, ComplexType> _symbols = new();
 
     // Registra una variable (Parámetros, This, o Variables Locales creadas por instrucciones)
-    public void Define(string name, ComplexMetaType type)
+    public void Define(string name, ComplexType type)
     {
         if (_symbols.ContainsKey(name))
             throw new DomainException($"La variable '{name}' ya está definida en este scope.");
@@ -22,7 +22,7 @@ public class DesignContext
     }
 
     // Busca una variable para validar su uso
-    public ComplexMetaType Resolve(string name)
+    public ComplexType Resolve(string name)
     {
         if (!_symbols.TryGetValue(name, out var type))
             throw new DomainException($"Error de Diseño: La variable '{name}' no existe en el contexto actual.");

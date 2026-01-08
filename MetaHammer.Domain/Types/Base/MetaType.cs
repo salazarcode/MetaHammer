@@ -37,17 +37,17 @@ public class MetaType : AggregateRoot
 
     public Method AddMethod(string name, IMetaType? returnType, bool returnsArray = false, bool isStatic = false)
     {
-        var method = new Method(this.Guid, name, returnType, returnsArray, isStatic);
+        var method = new Method(name, returnType, returnsArray, isStatic);
         _methods.Add(method);
         return method;
     }
     public Method AddConstructor()
     {
-        var method = new Method(this.Guid,"_constructor", null, false, false, true);
+        var method = new Method("_constructor", null, false, false, true);
         _methods.Add(method);
         return method;
     }
-    public Method? GetConstructorBySignature(params ComplexMetaType[] parameterTypes)
+    public Method? GetConstructorBySignature(params ComplexType[] parameterTypes)
     {
         var signature = string.Join("_constructor(", parameterTypes.Select(t => t.Name), ")");
         var constructor = Methods.FirstOrDefault(m => m.GetSignature() == signature);
