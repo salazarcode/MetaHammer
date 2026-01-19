@@ -7,9 +7,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Features\Instances\" />
-      <Folder Include="Features\Types\" />
-      <Folder Include="Interfaces\" />
+      <Folder Include="Features\Instances\Commands\" />
+      <Folder Include="Features\Instances\Handlers\" />
+      <Folder Include="Features\Instances\Queries\" />
+      <Folder Include="Features\Types\Commands\" />
+      <Folder Include="Features\Types\Handlers\" />
+      <Folder Include="Features\Types\Queries\" />
     </ItemGroup>
 
     <ItemGroup>

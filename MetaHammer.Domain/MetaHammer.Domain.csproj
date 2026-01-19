@@ -7,4 +7,9 @@
         <LangVersion>12</LangVersion>
     </PropertyGroup>
 
+    <ItemGroup>
+      <Folder Include="Features\Interpreter\" />
+      <Folder Include="Interfaces\Services\" />
+    </ItemGroup>
+
 </Project>

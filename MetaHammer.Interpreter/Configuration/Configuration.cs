@@ -1,3 +1,4 @@
+/*
 using MetaHammer.Interpreter.Interfaces;
 using MetaHammer.Interpreter.Methods;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,8 +23,9 @@ public static class Configuration
     {
         // Aquí centralizas todas tus funciones nativas
         services.AddSingleton<INativeMethod, CreateInstance>();
-        
-        // Si mañana creas una nueva, solo la agregas aquí y 
+
+        // Si mañana creas una nueva, solo la agregas aquí y
         // el sistema la reconocerá automáticamente.
     }
 }
+*/

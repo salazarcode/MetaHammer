@@ -1,4 +1,5 @@
-using MetaHammer.Domain.Instances;
+/*
+using MetaHammer.Domain.Features.Objects;
 using MetaHammer.Interpreter.Interfaces;
 
 namespace MetaHammer.Interpreter.Base;
@@ -12,9 +13,10 @@ public abstract class NativeMethodBase : INativeMethod
     {
         Context = context;
     }
-    
+
     public MetaObject Run(params MetaObject[]? arguments)
     {
         throw new NotImplementedException();
     }
 }
+*/

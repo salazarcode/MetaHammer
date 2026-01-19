@@ -1,4 +1,5 @@
-using MetaHammer.Domain.Instances;
+/*
+using MetaHammer.Domain.Features.Objects;
 
 namespace MetaHammer.Interpreter.Interfaces;
 
@@ -17,8 +18,9 @@ public interface IInterpreter
     /// <returns>Una instancia que representa el resultado de la ejecución.</returns>
     /// <exception cref="MetaExecutionException">Se lanza si ocurre un error durante la interpretación.</exception>
     MetaObject? Execute(
-        Context context, 
+        Context context,
         Guid guid,
-        string methodName, 
+        string methodName,
         params MetaObject[] arguments);
 }
+*/

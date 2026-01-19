@@ -1,7 +1,8 @@
+/*
 namespace MetaHammer.Interpreter.Interfaces;
 
 /// <summary>
-/// Define el catálogo de funciones nativas (implementadas en C#) 
+/// Define el catálogo de funciones nativas (implementadas en C#)
 /// disponibles para el motor de ejecución.
 /// </summary>
 public interface INativeMethodProvider
@@ -24,3 +25,4 @@ public interface INativeMethodProvider
     /// </summary>
     IEnumerable<INativeMethod> GetAll();
 }
+*/

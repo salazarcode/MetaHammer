@@ -1,11 +1,6 @@
 namespace MetaHammer.Domain.Common;
 
-public abstract class Entity
+public abstract class Entity(Guid guid)
 {
-    public Guid Guid { get; protected set; }
-
-    public Entity(Guid guid)
-    {
-        Guid = guid;
-    }
+    public Guid Guid { get; protected set; } = guid;
 }

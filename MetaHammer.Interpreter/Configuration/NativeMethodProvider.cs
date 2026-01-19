@@ -1,3 +1,4 @@
+/*
 using MetaHammer.Interpreter.Interfaces;
 
 namespace MetaHammer.Interpreter.Configuration;
@@ -13,7 +14,7 @@ public class NativeMethodProvider : INativeMethodProvider
     }
 
     public INativeMethod Get(string identifier) => _methods[identifier];
-    
+
     public bool Exists(string identifier)
     {
         throw new NotImplementedException();
@@ -29,3 +30,4 @@ public class NativeMethodProvider : INativeMethodProvider
         throw new NotImplementedException();
     }
 }
+*/

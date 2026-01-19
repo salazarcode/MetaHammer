@@ -1,4 +1,5 @@
-using MetaHammer.Domain.Instances;
+/*
+using MetaHammer.Domain.Features.Objects;
 using MetaHammer.Interpreter.Interfaces;
 
 namespace MetaHammer.Interpreter;
@@ -16,7 +17,7 @@ public class Interpreter : IInterpreter
         // var method = instance.Methods.FirstOrDefault(m => m.Name == methodName);
         //
         // if (method == null)
-        //     throw new ApplicationException($"Method '{methodName}' not found in instance of type '{instance.Type.Name}'.");
+        //     throw new ApplicationException($"MetaMethod '{methodName}' not found in instance of type '{instance.Type.Name}'.");
         //
         // // 1. Validar tipos de argumentos contra la firma del método
         // method.ValidateArguments(arguments);
@@ -39,3 +40,4 @@ public class Interpreter : IInterpreter
         return null;
     }
 }
+*/
