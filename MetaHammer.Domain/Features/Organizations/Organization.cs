@@ -60,12 +60,12 @@ public class Organization : Entity
         return user;
     }
 
-    public MetaClass AddMetaClass(string name, MetaNature metaNature, User user)
+    public MetaClass AddMetaClass(string name, MetaNature metaNature, User user, bool isNative = false)
     {
         if (Classes.Any(x => x.Name == name))
             throw new DomainException($"El organization ya tiene una clase de nombre '{name}'");
         
-        var metaClass = new MetaClass(Guid.NewGuid(), name, metaNature, this, user);
+        var metaClass = new MetaClass(Guid.NewGuid(), name, metaNature, this, user, isNative);
         return metaClass;
     }
     

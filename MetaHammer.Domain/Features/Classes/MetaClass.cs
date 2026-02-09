@@ -13,41 +13,17 @@ namespace MetaHammer.Domain.Features.Classes;
 /// </summary>
 public class MetaClass : AggregateRoot
 {
-    public MetaClass(Guid guid, string name, MetaNature metaNature, Organization organization, User user, MetaClass? parentClass = null, List<MetaClass>? interfaces = null) : base(guid)
+    public MetaClass(Guid guid, string name, MetaNature metaNature, Organization organization, User user, bool isNative = false, MetaClass? parentClass = null, List<MetaClass>? interfaces = null) : base(guid)
     {
         NameFormatValidator.ValidatePascalCase(name, "Type");
         Name = name;
         Version = 1;
         MetaNature = metaNature;
+        IsNative = isNative;
         
         Organization = organization;
-        OrganizationGuid = organization.Guid;
-        CreatedBy = user; 
-        CreatedByGuid = user.Guid;
-        
-        
-        var allowedClassNaturesForParentClass = new List<MetaNature>()
-        {
-            MetaNature.Primitive,
-            MetaNature.Entity,
-            MetaNature.ValueObject
-        };
-        
-        if (parentClass is not null)
-            if (allowedClassNaturesForParentClass.Contains(parentClass.MetaNature))
-            {
-                ParentClass = parentClass;
-                ParentClassGuid = parentClass.Guid;
-            }
-        
-        if(interfaces is not null)
-        {
-            if (interfaces.Any(x => x.MetaNature != MetaNature.Interface))
-                throw new DomainException("Interfaces collection must only contain MetaClasses with MetaNature = MetaNature.INTERFACE");
-            
-            foreach (var interfaceMetaClass in interfaces)
-                Interfaces.Add(interfaceMetaClass);
-        }
+// ... existing code ...
+        AddDomainEvent(new Events.MetaClassCreated(Guid, Name, MetaNature, OrganizationGuid, IsNative));
     }
     
     #region Identity
@@ -55,6 +31,8 @@ public class MetaClass : AggregateRoot
     public string Name { get; init; }
 
     public MetaNature MetaNature { get; set; }
+
+    public bool IsNative { get; init; }
 
     public MetaClass? ParentClass { get; set; }
 
@@ -121,18 +99,19 @@ public class MetaClass : AggregateRoot
     #endregion
     
     #region Properties
-    private List<MetaProperty> Properties { get; set; } = new();
+    private List<MetaProperty> _properties { get; set; } = new();
     
-    public IReadOnlyCollection<MetaProperty> GetProperties => Properties.AsReadOnly();
+    public IReadOnlyCollection<MetaProperty> Properties => _properties.AsReadOnly();
 
     public void AddProperty(string name, MetaClass propertyClass, bool isCollection = false)
     {
-
+        NameFormatValidator.ValidatePascalCase(name, "Property");
         var property = Properties.FirstOrDefault(p => p.Name == name && p.MetaClass.Name == propertyClass.Name);
         
         if(property == null)
         {
-            Properties.Add(new MetaProperty(Guid.NewGuid(), name, propertyClass, isCollection));
+            _properties.Add(new MetaProperty(Guid.NewGuid(), name, propertyClass, isCollection));
+            AddDomainEvent(new Events.MetaPropertyAdded(Guid, name, propertyClass.Guid, isCollection));
         }
         else
         {
@@ -141,5 +120,16 @@ public class MetaClass : AggregateRoot
     }
     
     public MetaProperty? Property(string propertyName) =>Properties.FirstOrDefault(p => p.Name == propertyName);
+
+    /// <summary>
+    /// Carga una propiedad desde la persistencia sin disparar eventos de dominio.
+    /// </summary>
+    public void LoadProperty(string name, MetaClass propertyClass, bool isCollection = false)
+    {
+        if (!_properties.Any(p => p.Name == name))
+        {
+            _properties.Add(new MetaProperty(Guid.NewGuid(), name, propertyClass, isCollection));
+        }
+    }
     #endregion
 }

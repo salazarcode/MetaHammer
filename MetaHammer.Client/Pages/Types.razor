@@ -1,0 +1,130 @@
+@page "/types"
+@using MetaHammer.Application.DTOs
+@inject HttpClient Http
+@inject NavigationManager Navigation
+
+<PageTitle>MetaHammer - Type Management</PageTitle>
+
+<h1>MetaType Management</h1>
+
+<div class="card mb-4">
+    <div class="card-header">Create New MetaType</div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Name</label>
+                <input @bind="newTypeName" class="form-control" placeholder="e.g. Person" />
+            </div>
+            <div class="col-md-3 mb-3">
+                <label class="form-label">Nature</label>
+                <select @bind="newTypeNature" class="form-select">
+                    <option value="Entity">Entity</option>
+                    <option value="ValueObject">ValueObject</option>
+                    <option value="Primitive">Primitive</option>
+                </select>
+            </div>
+            <div class="col-md-2 mb-3 d-flex align-items-end">
+                <div class="form-check mb-2">
+                    <input class="form-check-input" type="checkbox" @bind="isNative" id="isNativeCheck">
+                    <label class="form-check-label" for="isNativeCheck">
+                        Is Native
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3 d-flex align-items-end">
+                <button @onclick="CreateType" class="btn btn-primary w-100">Create Type</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (types == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Nature</th>
+                <th>Native</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var type in types)
+            {
+                <tr>
+                    <td>@type.Name</td>
+                    <td>@type.Nature</td>
+                    <td>@(type.IsNative ? "Yes" : "No")</td>
+                    <td>
+                        <button @onclick='() => Navigation.NavigateTo($"/types/{type.Guid}")' class="btn btn-sm btn-outline-primary">Edit</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@if (!string.IsNullOrEmpty(message))
+{
+    <div class="alert alert-info mt-3">@message</div>
+}
+
+@code {
+    private List<MetaTypeDto>? types;
+    private string newTypeName = "";
+    private string newTypeNature = "Entity";
+    private bool isNative = false;
+    private string message = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadTypes();
+    }
+
+    private async Task LoadTypes()
+    {
+        try 
+        {
+            types = await Http.GetFromJsonAsync<List<MetaTypeDto>>("http://localhost:5000/api/MetaType");
+        }
+        catch (Exception ex)
+        {
+            message = $"Error loading types: {ex.Message}";
+        }
+    }
+
+    private async Task CreateType()
+    {
+        try
+        {
+            var request = new CreateMetaTypeRequest(
+                newTypeName, 
+                newTypeNature, 
+                Guid.NewGuid(), 
+                Guid.NewGuid(),
+                isNative
+            );
+
+            var response = await Http.PostAsJsonAsync("http://localhost:5000/api/MetaType", request);
+            if (response.IsSuccessStatusCode)
+            {
+                var newGuid = await response.Content.ReadFromJsonAsync<Guid>();
+                Navigation.NavigateTo($"/types/{newGuid}");
+            }
+            else
+            {
+                var error = await response.Content.ReadFromJsonAsync<ApiErrorResponse>();
+                message = $"Error: {error?.Detail ?? response.ReasonPhrase}";
+            }
+        }
+        catch (Exception ex)
+        {
+            message = $"Exception: {ex.Message}";
+        }
+    }
+}

@@ -1,0 +1,60 @@
+@page "/"
+@using MetaHammer.Application.DTOs
+@inject HttpClient Http
+
+<PageTitle>MetaHammer - Dashboard</PageTitle>
+
+<h1>MetaHammer Dashboard</h1>
+
+@if (types == null)
+{
+    <p><em>Loading stats...</em></p>
+}
+else
+{
+    <div class="row mt-4">
+        <div class="col-md-4">
+            <div class="card text-white bg-primary mb-3">
+                <div class="card-header">Total Types</div>
+                <div class="card-body">
+                    <h2 class="card-title">@types.Count</h2>
+                    <p class="card-text">Registered in the system.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-success mb-3">
+                <div class="card-header">Native Types</div>
+                <div class="card-body">
+                    <h2 class="card-title">@types.Count(t => t.IsNative)</h2>
+                    <p class="card-text">Built-in primitives.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-info mb-3">
+                <div class="card-header">Custom Types</div>
+                <div class="card-body">
+                    <h2 class="card-title">@types.Count(t => !t.IsNative)</h2>
+                    <p class="card-text">User defined entities.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private List<MetaTypeDto>? types;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try 
+        {
+            types = await Http.GetFromJsonAsync<List<MetaTypeDto>>("http://localhost:5000/api/MetaType");
+        }
+        catch 
+        {
+            // Handle error
+        }
+    }
+}

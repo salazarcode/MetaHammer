@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
@@ -17,6 +17,11 @@
 
     <ItemGroup>
       <ProjectReference Include="..\MetaHammer.Domain\MetaHammer.Domain.csproj" />
+      <ProjectReference Include="..\MetaHammer.Persistence.Neo4j\MetaHammer.Persistence.Neo4j.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="MediatR" Version="14.0.0" />
     </ItemGroup>
 
 </Project>

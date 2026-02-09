@@ -1,0 +1,170 @@
+@page "/types/{Guid:guid}"
+@using MetaHammer.Application.DTOs
+@inject HttpClient Http
+@inject NavigationManager Navigation
+
+<PageTitle>MetaHammer - Edit Type</PageTitle>
+
+@if (currentType == null)
+{
+    <p><em>Loading type details...</em></p>
+}
+else
+{
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Edit Type: @currentType.Name</h1>
+        <button @onclick='() => Navigation.NavigateTo("/types")' class="btn btn-outline-secondary">Back to List</button>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header">Add New Property</div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label">Property Name</label>
+                        <input @bind="newPropName" class="form-control" placeholder="e.g. age" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Property Type</label>
+                        <select @bind="newPropTypeGuid" class="form-select">
+                            <option value="">-- Select Type --</option>
+                            @if (availableTypes != null)
+                            {
+                                foreach (var type in availableTypes)
+                                {
+                                    <option value="@type.Guid">@type.Name (@type.Nature)</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" @bind="newPropIsCollection" id="isColCheck">
+                        <label class="form-check-label" for="isColCheck">Is Collection</label>
+                    </div>
+                    <button @onclick="AddPropertyToList" class="btn btn-success w-100" disabled="@(string.IsNullOrEmpty(newPropName) || newPropTypeGuid == Guid.Empty)">
+                        Add to Batch
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <span>Properties</span>
+                    @if (pendingProperties.Any())
+                    {
+                        <button @onclick="SaveChanges" class="btn btn-primary btn-sm">Save All Changes (@pendingProperties.Count)</button>
+                    }
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Type</th>
+                                <th>Collection</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var prop in currentType.Properties)
+                            {
+                                <tr>
+                                    <td>@prop.Name</td>
+                                    <td>@prop.TypeName</td>
+                                    <td>@(prop.IsCollection ? "Yes" : "No")</td>
+                                    <td><span class="badge bg-secondary">Saved</span></td>
+                                </tr>
+                            }
+                            @foreach (var prop in pendingProperties)
+                            {
+                                <tr class="table-success">
+                                    <td>@prop.Name</td>
+                                    <td>@GetTypeName(prop.TypeGuid)</td>
+                                    <td>@(prop.IsCollection ? "Yes" : "No")</td>
+                                    <td><span class="badge bg-warning text-dark">Pending</span></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(message))
+{
+    <div class="alert alert-info mt-3">@message</div>
+}
+
+@code {
+    [Parameter] public Guid Guid { get; set; }
+
+    private MetaTypeDto? currentType;
+    private List<MetaTypeDto>? availableTypes;
+    private List<AddPropertyRequest> pendingProperties = new();
+    
+    private string newPropName = "";
+    private Guid newPropTypeGuid = Guid.Empty;
+    private bool newPropIsCollection = false;
+    private string message = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        try 
+        {
+            currentType = await Http.GetFromJsonAsync<MetaTypeDto>($"http://localhost:5000/api/MetaType/{Guid}");
+            availableTypes = await Http.GetFromJsonAsync<List<MetaTypeDto>>("http://localhost:5000/api/MetaType");
+        }
+        catch (Exception ex)
+        {
+            message = $"Error loading data: {ex.Message}";
+        }
+    }
+
+    private void AddPropertyToList()
+    {
+        pendingProperties.Add(new AddPropertyRequest(newPropName, newPropTypeGuid, newPropIsCollection));
+        newPropName = "";
+        newPropTypeGuid = Guid.Empty;
+        newPropIsCollection = false;
+    }
+
+    private string GetTypeName(Guid guid)
+    {
+        return availableTypes?.FirstOrDefault(t => t.Guid == guid)?.Name ?? "Unknown";
+    }
+
+    private async Task SaveChanges()
+    {
+        try
+        {
+            var request = new AddMetaTypePropertiesRequest(pendingProperties);
+            var response = await Http.PostAsJsonAsync($"http://localhost:5000/api/MetaType/{Guid}/properties", request);
+            
+            if (response.IsSuccessStatusCode)
+            {
+                message = "Changes saved successfully!";
+                pendingProperties.Clear();
+                await LoadData();
+            }
+            else
+            {
+                var error = await response.Content.ReadFromJsonAsync<ApiErrorResponse>();
+                message = $"Error saving: {error?.Detail ?? response.ReasonPhrase}";
+            }
+        }
+        catch (Exception ex)
+        {
+            message = $"Exception: {ex.Message}";
+        }
+    }
+}

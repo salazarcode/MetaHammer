@@ -1,0 +1,58 @@
+services:
+  neo4j:
+    image: neo4j:5.15
+    container_name: metahammer-neo4j
+    ports:
+      - "7474:7474" # HTTP
+      - "7687:7687" # Bolt
+    environment:
+      - NEO4J_AUTH=neo4j/password
+      - NEO4J_PLUGINS=["apoc"]
+    networks:
+      - metahammer-net
+    volumes:
+      - neo4j_data:/data
+      - neo4j_logs:/logs
+    healthcheck:
+      test: ["CMD", "cypher-shell", "-u", "neo4j", "-p", "password", "RETURN 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: .
+      dockerfile: MetaHammer.API/Dockerfile
+    container_name: metahammer-api
+    ports:
+      - "5000:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - Neo4j__Uri=bolt://neo4j:7687
+      - Neo4j__User=neo4j
+      - Neo4j__Password=password
+    depends_on:
+      neo4j:
+        condition: service_healthy
+    networks:
+      - metahammer-net
+
+  client:
+    build:
+      context: .
+      dockerfile: MetaHammer.Client/Dockerfile
+    container_name: metahammer-client
+    ports:
+      - "8080:80"
+    depends_on:
+      - api
+    networks:
+      - metahammer-net
+
+networks:
+  metahammer-net:
+    driver: bridge
+
+volumes:
+  neo4j_data:
+  neo4j_logs:
